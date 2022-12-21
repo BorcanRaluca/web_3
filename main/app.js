@@ -73,7 +73,7 @@ app.post('/food-items', async (req, res) => {
         }
     }
     catch(err){
-        res.status(400).json({ message: 'server error' })
+        res.status(400).json({ message: 'malformed request' })
     }
 })
 
