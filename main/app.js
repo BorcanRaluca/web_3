@@ -57,23 +57,27 @@ app.get('/food-items', async (req, res) => {
 app.post('/food-items', async (req, res) => {
     try{
         if(Object.keys(req.body).length != 0){
-            if(req.body.calories < 0) {
-                res.status(400).json({message: 'calories should be a positive number'})
-            }
-            else {
-                if(req.body.category.length < 3 || req.body.category.length > 10) {
-                    res.status(400).json({message: 'not a valid category'})
-                } else {
-                    const item = await FoodItem.create(req.body)
-                    res.status(201).json({message: 'created'})
+            if(Object.hasOwn(req.body, 'category') && Object.hasOwn(req.body, 'calories') && Object.hasOwn(req.body, 'name')) {
+                if(req.body.calories < 0) {
+                    res.status(400).json({message: 'calories should be a positive number'})
                 }
+                else {
+                    if(req.body.category.length < 3 || req.body.category.length > 10) {
+                        res.status(400).json({message: 'not a valid category'})
+                    } else {
+                        const item = await FoodItem.create(req.body)
+                        res.status(201).json({message: 'created'})
+                    }
+                }
+            } else {
+                res.status(400).json({message: 'malformed request'})
             }
         } else {
             res.status(400).json({message: 'body is missing'})
         }
     }
     catch(err){
-        res.status(400).json({ message: 'malformed request' })
+        res.status(500).json({ message: 'server error' })
     }
 })
 
